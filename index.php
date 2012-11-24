@@ -20,7 +20,6 @@
   <div id="container">
     <header>
       <h1><a id="Pinterest" href="/"></a></h1>
-      <p><br/><br/>Hi ! I'm <a href="http://pinterest.com/iamjeff75/" target="_blank">iamjeff75</a> on Pinterest, here is all my inspirational pins retrieved with my web scrapping code.</p>
       <p>Hi ! I'm <a href="http://pinterest.com/iamjeff75/" target="_blank">iamjeff75</a> on Pinterest, here is all my inspirational pins retrieved with my web scrapping code.</p>
     </header>
     <div id="main" role="main">
@@ -31,8 +30,6 @@
 require_once 'pinterest.php';
 
 $pinterest = new Pinterest();
-$pins = $pinterest->getPins('iamjeff75');
-
 $pins = array();
 if (file_exists('pinterest.json')) {
   $content = file_get_contents('pinterest.json');
