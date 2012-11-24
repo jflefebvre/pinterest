@@ -1,3 +1,21 @@
+<?php
+  if (isset($_GET['p'])) {
+      $page = $_GET['p'];
+      if (file_exists('pinterest.json')) {
+        $content = file_get_contents('pinterest.json');
+        $pins = unserialize($content);
+        $offset = ($page * 10)+1;
+        $pins = array_slice($pins, $offset, 10);
+
+        $content = '';
+        foreach ($pins as $pin) {
+          $content .="<li><img src='$pin'/></li>";          
+        }
+        echo $content;
+      } 
+      die();
+  }
+?>
 <!doctype html>
 <!--[if lt IE 7]> <html class="no-js ie6 oldie" lang="en"> <![endif]-->
 <!--[if IE 7]>    <html class="no-js ie7 oldie" lang="en"> <![endif]-->
@@ -40,6 +58,7 @@ if (file_exists('pinterest.json')) {
   file_put_contents('pinterest.json', $data);
 }
 
+$pins = array_slice($pins, 0, 10);
 foreach ($pins as $pin) {
 	echo "<li><img src='$pin' /></li>";
 }
@@ -61,33 +80,59 @@ foreach ($pins as $pin) {
   <!-- Include the plug-in -->
   <script src="jquery.wookmark.min.js"></script>  
   <!-- Once the images are loaded, initalize the Wookmark plug-in. -->
+  
+
+  <!-- Once the page is loaded, initalize the plug-in. -->
   <script type="text/javascript">
-    $('#tiles').imagesLoaded(function() {
-      // Prepare layout options.
-      var options = {
-        autoResize: true, // This will auto-update the layout when the browser window is resized.
-        container: $('#main'), // Optional, used for some extra CSS styling
-        offset: 2, // Optional, the distance between grid items
-        itemWidth: 600 // Optional, the width of a grid item
-      };
-      
-      // Get a reference to your grid items.
-      var handler = $('#tiles li');
+    var handler = null;
+    
+    var page = 1;
+
+    // Prepare layout options.
+    var options = {
+      autoResize: true, // This will auto-update the layout when the browser window is resized.
+      container: $('#main'), // Optional, used for some extra CSS styling
+      offset: 5, // Optional, the distance between grid items
+      itemWidth: 800 // Optional, the width of a grid item
+    };
+    
+    /**
+     * When scrolled all the way to the bottom, add more tiles.
+     */
+    function onScroll(event) {
+      // Check if we're within 100 pixels of the bottom edge of the broser window.
+      var closeToBottom = ($(window).scrollTop() + $(window).height() > $(document).height() - 100);
+      if(closeToBottom) {        
+        page++;
+        var ajaxRunning = false;
+        if (!ajaxRunning) {
+          ajaxRunning = true;
+          $.ajax({
+            url: 'index.php?p='+page,
+            success: function(data) {
+              $('#tiles').append(data);            
+              // Clear our previous layout handler.
+              if(handler) handler.wookmarkClear();
+              
+              // Create a new layout handler.
+              handler = $('#tiles li');
+              handler.wookmark(options);
+            }
+          });
+          ajaxRunning = false;
+        }
+      }
+    };
+  
+    $(document).ready(new function() {
+      // Capture scroll event.
+      $(document).bind('scroll', onScroll);
       
       // Call the layout function.
+      handler = $('#tiles li');
       handler.wookmark(options);
-      
-      // Capture clicks on grid items.
-      handler.click(function(){
-        // Randomize the height of the clicked item.
-        var newHeight = $('img', this).height() + Math.round(Math.random()*300+30);
-        $(this).css('height', newHeight+'px');
-        
-        // Update the layout.
-        handler.wookmark();
-      });
     });
   </script>
-  
+
 </body>
 </html>

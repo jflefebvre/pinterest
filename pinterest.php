@@ -24,9 +24,7 @@
             foreach ($matches as $pin) {
                 $tmp = strpos($pin, "upload");
                 if ($tmp !== FALSE) {
-                    //$pins[] = $pin;
                     $pins[] = str_replace('_b', '_f', $pin);
-                    //$logger->info($pin);
                 }
             }
 
