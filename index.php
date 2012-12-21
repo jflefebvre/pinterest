@@ -38,7 +38,8 @@
   <div id="container">
     <header>
       <h1><a id="Pinterest" href="/"></a></h1>
-      <p>Hi ! I'm <a href="http://pinterest.com/iamjeff75/" target="_blank">iamjeff75</a> on Pinterest, here is all my inspirational pins retrieved with my web scrapping code.</p>
+      <p>Hi ! I'm <a href="http://pinterest.com/iamjeff75/" target="_blank">iamjeff75</a> on Pinterest, here is all my inspirational pins retrieved with my pinterest web scrapping code.</p>
+      <p>Feel free to fork the <a href="https://github.com/jflefebvre/pinterest" target="_blank">code available on GitHub</a>.</p>
     </header>
     <div id="main" role="main">
 
@@ -49,7 +50,7 @@ require_once 'pinterest.php';
 
 $pinterest = new Pinterest();
 $pins = array();
-if (file_exists('pinterest.json')) {
+if (file_exists('pinterest.json') && !isset($_GET['rebuild'])) {
   $content = file_get_contents('pinterest.json');
   $pins = unserialize($content);
 } else {
@@ -132,6 +133,9 @@ foreach ($pins as $pin) {
       handler = $('#tiles li');
       handler.wookmark(options);
     });
+
+    </script>
+
   </script>
 
 </body>
