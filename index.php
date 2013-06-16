@@ -1,4 +1,16 @@
 <?php
+
+/** 
+  * @desc A PHP script displaying Pinterest pins of a user using WookMark jQuery plugin
+  * 
+  * @author Jean-François Lefebvre lefebvre.jf@gmail.com
+  * @link https://github.com/jflefebvre/pinterest
+  * 
+*/
+
+$storePinsLocally = true;
+$pinterestUser = 'iamjeff75';
+
   if (isset($_GET['p'])) {
       $page = $_GET['p'];
       if (file_exists('pinterest.json')) {
@@ -50,11 +62,12 @@ require_once 'pinterest.php';
 
 $pinterest = new Pinterest();
 $pins = array();
+
 if (file_exists('pinterest.json') && !isset($_GET['rebuild'])) {
   $content = file_get_contents('pinterest.json');
   $pins = unserialize($content);
 } else {
-  $pins = $pinterest->getPins('iamjeff75');
+  $pins = $pinterest->getPins($pinterestUser, $storePinsLocally);
   $data = serialize($pins);
   file_put_contents('pinterest.json', $data);
 }
@@ -133,6 +146,16 @@ foreach ($pins as $pin) {
       handler = $('#tiles li');
       handler.wookmark(options);
     });
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-116372-1']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
 
     </script>
 
