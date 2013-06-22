@@ -19,10 +19,10 @@
             
             $files = glob($path.'/*');
             
-            if (empty($files))
+	    if (empty($files))
                 return null;
 
-            return is_file($path) ? @unlink($path) : array_map(array($this, 'rrmdir'), $files) == $this->rrmdir($path);
+            return is_file($path) ? @unlink($path) : array_map(array($this, 'rrmdir'), $files);
         }
 
         /**
