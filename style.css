@@ -1,0 +1,76 @@
+  
+body {
+    background-color: #fff;
+}
+
+#Pinterest {
+    background: url("LogoRed.png") repeat scroll 0 0 transparent;
+    display: block;
+    height: 26px;
+    top: 9px;
+    width: 100px;
+    margin: auto;
+}
+
+a {
+    color: #06e;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+a:hover, a:visited {
+	color: #06e;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+div {
+    background-size: 100%;
+}
+
+#grid { 
+    position: relative;    
+    width:80%;
+    height: 10000px;
+    margin: 0px auto;
+}
+
+p {
+    margin: 0px;
+    padding: 3px;
+}
+
+p.info {
+    display:block;
+    font-size: 0.9em;
+    width: 200px;
+}
+
+p.board {
+    display: block;
+    font-weight: bold;
+}
+
+ul li.item {
+    border: #aaa 1px solid;
+    list-style-type: none;
+}
+
+header h1 {
+    font-family: 'Karla', sans-serif;
+    text-align: center;
+    font-size: 36px;
+    font-weight: normal;
+    margin: 15px;
+}
+
+header p {
+    font-family: 'Karla', sans-serif;
+    text-align: center;
+    font-size: 22px;
+    color: #777;
+    margin: 0;
+    padding: 10px 0 0;
+}
