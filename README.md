@@ -15,7 +15,7 @@ Cookbook
     
     casperjs pinterest-casper.js <user_name>
 
-This will generate a json file with all your pins data
+This will generate a json file with all your pins data. <user_name> is your pinterest user name.
     
     php pinterest-webscraper.php
 
