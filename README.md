@@ -11,7 +11,7 @@ I assume that you have the following packages installed in your path.
 
 Cookbook
 
-- Run the following scripts to prepare the data
+Run the following scripts to prepare the data
     
     casperjs pinterest-casper.js <user_name>
 
