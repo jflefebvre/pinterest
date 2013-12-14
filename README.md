@@ -15,13 +15,13 @@ Run the following scripts to prepare the data
     
     casperjs pinterest-casper.js <user_name>
 
-This will generate a json file with all your pins data. <user_name> is your pinterest user name.
+It will generate a json file with all your pins data. 
     
     php pinterest-webscraper.php
 
-This will extract original images of your pins and will create the thumbnails for WookMark
+It will import original pins in pins folder and will generate the thumbnails for WookMark
 
 That's all !
 
-Feel free to drop me a line if you like this project. (lefebvre.jf@gmail.com)
+Feel free to drop me a line if you like this project or have some suggestions. (lefebvre.jf@gmail.com)
 
