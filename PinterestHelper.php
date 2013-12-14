@@ -57,8 +57,13 @@
 			$pinInfo = array();
 
 			if (@fopen($pinUrl, "r")) {
+				// retry making file_get_contents when connection has failed
+				$pinContent = false;
+				while($pinContent === false) {
+					//echo 'Try to connect to ' . $pinUrl . PHP_EOL;
+					$pinContent = file_get_contents($pinUrl);
+				}
 
-				$pinContent = file_get_contents($pinUrl);
 				$html = str_get_html($pinContent);
 				$pin = $html->find('.pinImage');
 				$attr = $pin[0]->attr;

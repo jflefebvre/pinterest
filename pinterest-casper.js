@@ -12,8 +12,8 @@ var casper = require('casper').create({
 
 if (casper.cli.args.length!=1) {
 	casper.echo("Pinterest web scrapper v0.9");
-	casper.echo("pinterest account missing parameter");
-	casper.echo("Example : casperjs pinterest-bot.js iamjeff75");
+	casper.echo("pinterest account is missing");
+	casper.echo("Example : casperjs pinterest-casper.js iamjeff75");
 	casper.exit();	
 }
 
@@ -24,7 +24,7 @@ var fs = require('fs');
 var content = '';
 
 casper.on('remote.message', function(msg) {
-    this.echo('remote message caught: ' + msg);
+    // this.echo('remote message caught: ' + msg);
 });
 
 casper.start('http://pinterest.com/'+user+'/pins/', function() {
@@ -33,8 +33,6 @@ casper.start('http://pinterest.com/'+user+'/pins/', function() {
 
 casper.thenEvaluate(function() {
 
-    // console.log('screen width : '+ screen.width + ' screen.height : ' + screen.height + ' screen.availHeight : ' + screen.availHeight);
-
     var pTimerCounter = 1;
     var pLastCount = 0;
     var pPins = new Array();
@@ -42,7 +40,7 @@ casper.thenEvaluate(function() {
     window.data = {sucess:true};
 
     var pTimer = window.setInterval(function() {
-        console.log('timer function');
+        
         var pUrls = $('.pinImageWrapper');
         var pLength = pUrls.length;
         var pDescriptions = $('.pinImg');
@@ -67,7 +65,6 @@ casper.thenEvaluate(function() {
            window.clearInterval(pTimer);
 
         } else {
-            // console.log('pLastCount <-- pLength');
             pLastCount = pLength;    
             window.document.body.scrollTop = document.body.scrollHeight; 
             pTimerCounter++;
@@ -82,7 +79,6 @@ casper.waitFor(function() {
 }, function() {
     var jsonFormatData = JSON.stringify(this.getGlobal('data')); 
     fs.write('pinterest.json', jsonFormatData); 
-    //utils.dump(jsonFormatData);
     this.echo('Data saved in pinterest.json');
 
     var end = new Date().getTime();

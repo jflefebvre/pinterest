@@ -26,36 +26,33 @@ $pins = array();
 
 foreach ($pins_data as $pin) {
 
-    $pinName = $pin->description;
+    $pinDescription = $pin->description;
     $pinBoard = $pin->board;
     $pinThumbnail = $pin->pin_page;
     $pinPage = $pin->href;
 
-    // retrieve informations about the pin and save the original pin image
-	$pinInfo = PinterestHelper::getPinInfo($pinPage);
-    if (!empty($pinInfo)) {
-        $pinFullPath = $pinInfo["src"];
-        $pinExplode = explode('/', $pinFullPath);
-        $pinName = end($pinExplode);
+    $pinImageNameExplode = explode('/', $pinThumbnail); 
+    $pinImageName = end($pinImageNameExplode);
+   
+    // retrieve informations about the pin and save the original pin image only if image not yet retrieved
+    //if (!file_exists($pinDataDir . $pinImageName)) {
+    	$pinInfo = PinterestHelper::getPinInfo($pinPage);
+        if (!empty($pinInfo)) {
+            $pinFullPath = $pinInfo["src"];
+            $pinExplode = explode('/', $pinFullPath);
+            $pinName = end($pinExplode);
 
-        $pinFilename = $pinDataDir . $pinName;
-        if (!file_exists($pinFilename)) file_put_contents($pinFilename, file_get_contents($pinFullPath));
+            $pinFilename = $pinDataDir . $pinName;
+            if (!file_exists($pinFilename)) file_put_contents($pinFilename, file_get_contents($pinFullPath));
 
-        $baseURL = '/'; 
-        $pinUrl = $baseURL . 'pins/' . $pinName;
-
-        $pin = array();
-        $pin['pin_url'] = $pinUrl;
-        $pin['pin_page_url'] = $pinPage;
-        $pin['image_name'] = $pinName;
-        $pin['image_fullpath'] = $pinFilename;
-        $pin['pinned'] = $pinInfo['pinned'];
-        $pin['board'] = $pinBoard;
-        $pin['description'] = $pinInfo['alt'];
-        $pin['width'] = $pinInfo['width'];
-        $pin['height'] = $pinInfo['height'];
-        $pins[] = $pin;
-    }
+            $pin = array();
+            $pin['image_name'] = $pinName;
+            $pin['pinned'] = $pinInfo['pinned'];
+            $pin['board'] = $pinBoard;
+            $pin['description'] = $pinDescription;
+            $pins[] = $pin;
+        }
+    //}
 }
 
 file_put_contents($pinterestJson, json_encode($pins));
