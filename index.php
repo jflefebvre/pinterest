@@ -1,5 +1,8 @@
 <?php
 
+error_reporting(E_ALL);
+ini_set("display_errors", 1);
+
 /** 
   * @desc A PHP script displaying Pinterest pins of a user using WookMark jQuery plugin
   * 
@@ -8,7 +11,7 @@
   * 
 */
 
-
+ $pdoSqliteDsn = 'sqlite:pinterest.db';
  $numberOfItemsByScroll = 50;
 
   /**
@@ -16,32 +19,43 @@
    */
   function l($pin) {
 
-    $image = new Imagick(__DIR__.'/pins/mini-' . $pin->image_name); 
+    $image = new Imagick(__DIR__.'/pins/mini-' . $pin['pin_image_name']); 
     $d = $image->getImageGeometry(); 
 
 
-    $link  = '<a href="pins/' . $pin->image_name . '" rel="lightbox">';
-    $link .= '<img src="pins/mini-' . $pin->image_name . '" alt="' . $pin->description . ' - ' . $pin->board . '" width="' . $d['width'].'" height="' . $d['height'] . '">';
+    $link  = '<a href="pins/' . $pin['pin_image_name'] . '" rel="lightbox">';
+    $link .= '<img src="pins/mini-' . $pin['pin_image_name'] . '" alt="' . $pin['description'] . ' - ' . $pin['board'] . '" width="' . $d['width'].'" height="' . $d['height'] . '">';
     $link .= '</a>';
-    $link .= '<p class="info">' . $pin->description . '</p><p class="board">::' . $pin->board . '</p>';
+    $link .= '<p class="info">' . $pin['id']  . '---' . $pin['description'] . '</p><p class="board">::' . $pin['board'] . '</p>';
     return $link;
   }
 
+
 if (isset($_GET['p'])) {
       $page = $_GET['p'];
-      if (file_exists('pinterest.json')) {
-        $content = file_get_contents('pinterest.json');
-        $pins = json_decode($content);
-        $offset = ($page * $numberOfItemsByScroll)+1;
-        $pins = array_slice($pins, $offset, $numberOfItemsByScroll);
+      $offset = ($page * $numberOfItemsByScroll)+1;
+      try {
 
-        $content = '';
-        foreach ($pins as $pin) {
-          $content .= '<li class="item">' . l($pin) . '</li>';          
+        $dbh = new PDO($pdoSqliteDsn); 
+
+        if ($dbh) {
+          $sth = $dbh->prepare("SELECT * FROM pinterest_ limit " . $offset . "," . $numberOfItemsByScroll);
+          $sth->execute();
+          $pins = $sth->fetchAll();
+            
+          $content = '';
+          foreach ($pins as $pin) {
+              $content .= '<li class="item">' . l($pin) . '</li>';
+          }
+          echo $content;
         }
-        echo $content;
-      } 
-      die();
+
+      }
+      catch (PDOException $ex) {
+        echo $ex->getMessage();
+      }
+
+      die();    
   }
 
 ?>
@@ -77,17 +91,24 @@ if (isset($_GET['p'])) {
 <?php
 
         $pins = array();
+        try {
 
-        if (file_exists('pinterest.json')) {
-          $content = file_get_contents('pinterest.json');
-          $pins = json_decode($content);
-        } 
+            $dbh = new PDO($pdoSqliteDsn); 
 
-        $pins = array_slice($pins, 0, $numberOfItemsByScroll);
-        foreach ($pins as $pin) {
-           echo '<li class="item">' . l($pin) . '</li>';
+            if ($dbh) {
+                $sth = $dbh->prepare("SELECT * FROM pinterest_ limit 0," . $numberOfItemsByScroll);
+                $sth->execute();
+                $pins = $sth->fetchAll();
+            
+                foreach ($pins as $pin) {
+                  echo '<li class="item">' . l($pin) . '</li>';
+                }
+
+            }
         }
-
+        catch (PDOException $ex) {
+          echo $ex->getMessage();
+        }
 ?>
         </ul>
       </div>

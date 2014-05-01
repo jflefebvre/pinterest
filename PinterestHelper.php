@@ -86,7 +86,7 @@
 
 		public static function generateThumbnails($src) {
 			// remove all existing thumbnails
-		    exec("rm $src/mini-*"); 
+		    // exec("rm $src/mini-*"); 
 
 		    // create thumbnails 
 		    $dir = opendir($src); 
@@ -94,7 +94,7 @@
 		        if (( $file != '.' ) && ( $file != '..' )) {
 		            $tmp = explode('.', $file); 
 		            $ext = end($tmp);
-				    if ($ext == 'jpg' && !startsWith($file, 'mini-')) {
+				    if ($ext == 'jpg' && !startsWith($file, 'mini-') && (!file_exists($src."/"."mini-".$file))) {
 				    	 echo " Generating thumbnail for $src/$file\n";
 					     exec("convert $src/$file -background white -gravity center -resize 200x -quality 80 $src/mini-$file");
 		   	    	}

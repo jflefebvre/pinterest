@@ -11,6 +11,12 @@ I assume that you have the following packages installed in your path.
 
 Cookbook
 
+Create a new sqlite db names pinterest.db in the root of the project
+
+Example:
+    
+    sqlite3 pinterest.db
+
 Run the following scripts to prepare the data
     
     casperjs pinterest-casper.js <user_name>
