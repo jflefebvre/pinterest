@@ -1,7 +1,7 @@
 <?php
 
-error_reporting(E_ALL);
-ini_set("display_errors", 1);
+//error_reporting(E_ALL);
+//ini_set("display_errors", 1);
 
 /** 
   * @desc A PHP script displaying Pinterest pins of a user using WookMark jQuery plugin
@@ -26,7 +26,7 @@ ini_set("display_errors", 1);
     $link  = '<a href="pins/' . $pin['pin_image_name'] . '" rel="lightbox">';
     $link .= '<img src="pins/mini-' . $pin['pin_image_name'] . '" alt="' . $pin['description'] . ' - ' . $pin['board'] . '" width="' . $d['width'].'" height="' . $d['height'] . '">';
     $link .= '</a>';
-    $link .= '<p class="info">' . $pin['id']  . '---' . $pin['description'] . '</p><p class="board">::' . $pin['board'] . '</p>';
+    $link .= '<p class="info">' . $pin['description'] . '</p><p class="board">::' . $pin['board'] . '</p>';
     return $link;
   }
 
@@ -39,7 +39,7 @@ if (isset($_GET['p'])) {
         $dbh = new PDO($pdoSqliteDsn); 
 
         if ($dbh) {
-          $sth = $dbh->prepare("SELECT * FROM pinterest_ limit " . $offset . "," . $numberOfItemsByScroll);
+          $sth = $dbh->prepare("SELECT * FROM pinterest_ order by 1 desc limit " . $offset . "," . $numberOfItemsByScroll);
           $sth->execute();
           $pins = $sth->fetchAll();
             
@@ -96,7 +96,7 @@ if (isset($_GET['p'])) {
             $dbh = new PDO($pdoSqliteDsn); 
 
             if ($dbh) {
-                $sth = $dbh->prepare("SELECT * FROM pinterest_ limit 0," . $numberOfItemsByScroll);
+                $sth = $dbh->prepare("SELECT * FROM pinterest_ order by 1 desc limit 0," . $numberOfItemsByScroll);
                 $sth->execute();
                 $pins = $sth->fetchAll();
             
