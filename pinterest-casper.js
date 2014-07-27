@@ -11,7 +11,7 @@ var casper = require('casper').create({
 });
 
 if (casper.cli.args.length!=1) {
-	casper.echo("Pinterest web scrapper v0.9");
+	casper.echo("Pinterest web scrapper v1.1");
 	casper.echo("pinterest account is missing");
 	casper.echo("Example : casperjs pinterest-casper.js iamjeff75");
 	casper.exit();	
@@ -27,8 +27,13 @@ casper.on('remote.message', function(msg) {
     // this.echo('remote message caught: ' + msg);
 });
 
+casper.userAgent('Mozilla/5.0 (Macintosh; Intel Mac OS X)');
 casper.start('http://pinterest.com/'+user+'/pins/', function() {
     console.log("load pinterest web site");
+    var html = this.getHTML();
+    if (html.search('Oops')!=-1) {
+        this.die('Oops message received : stop here.');
+    }
 });
 
 casper.thenEvaluate(function() {
@@ -36,42 +41,44 @@ casper.thenEvaluate(function() {
     var pTimerCounter = 1;
     var pLastCount = 0;
     var pPins = new Array();
+    var pPinsIndexes = new Array();
     window.done = 0;
-    window.data = {sucess:true};
+    window.data = new Array();
 
     var pTimer = window.setInterval(function() {
         
+        console.log('loop()');
         var pUrls = $('.pinImageWrapper');
-        var pLength = pUrls.length;
         var pDescriptions = $('.pinImg');
         var pBoard = $('.creditTitle');
     
+        pLength = parseInt($('.padItems').css('height').replace('px', ''));
         console.log('pUrls length : '+ pLength + ' pLastCount : ' + pLastCount);
         if (pLength == pLastCount) {
-    
-           window.done = 1;
-           
-           for(var i=0 ; i<pUrls.length ;i++) { 
+            window.clearInterval(pTimer);
+            window.done = 1;
+    } else {           
+           console.log('pUrls length : ' + pUrls.length);
+       for ( var i=0 ; i < pUrls.length ; i++) { 
                 var pPin = {};
-                pPin['href'] = 'http://www.pinterest.com'+$(pUrls[i]).attr('href');
+                pPin['pin_page'] = 'http://www.pinterest.com'+$(pUrls[i]).attr('href');
                 pPin['board'] = $(pBoard[i]).text();
                 pPin['description'] = $(pDescriptions[i]).attr('alt');
-                pPin['pin_page'] = $(pDescriptions[i]).attr('src');
-
-                pPins.push(pPin); 
+                pPin['pin_thumbnail'] = $(pDescriptions[i]).attr('src');
+                // search if pin already pushed
+                
+                if (!(pPin['pin_page'] in pPinsIndexes)) {
+                    window.data.push(pPin); 
+                    pPinsIndexes[pPin['pin_page']] = '';
+                }
            }
 
-           window.data = pPins;
-           window.clearInterval(pTimer);
-
-        } else {
-            pLastCount = pLength;    
-            window.document.body.scrollTop = document.body.scrollHeight; 
-            pTimerCounter++;
+           pLastCount = pLength;   
+           window.document.body.scrollTop = document.body.scrollHeight; 
+           pTimerCounter++;
         }
 
     }, 2000);
-
 });
 
 casper.waitFor(function() {

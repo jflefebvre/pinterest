@@ -17,6 +17,12 @@ Example:
     
     sqlite3 pinterest.db
 
+Then, create a tmp table with the following command
+
+     create table tmp (tmp int);
+
+Exit from sqlite with .exit
+
 Run the following scripts to prepare the data
     
     casperjs pinterest-casper.js <user_name>

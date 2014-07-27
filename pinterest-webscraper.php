@@ -51,8 +51,8 @@ try {
 
             $pinDescription = $pin->description;
             $pinBoard = $pin->board;
-            $pinThumbnail = $pin->pin_page;
-            $pinPage = $pin->href;
+            $pinThumbnail = $pin->pin_thumbnail;
+            $pinPage = $pin->pin_page;
 
             $pinImageNameExplode = explode('/', $pinThumbnail); 
             $pinImageName = end($pinImageNameExplode); 
