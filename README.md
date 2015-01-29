@@ -25,7 +25,7 @@ Exit from sqlite with .exit
 
 Run the following scripts to prepare the data
     
-    casperjs pinterest-casper.js <user_name>
+    casperjs --ssl-protocol=any pinterest-casper.js <user_name>
 
 It will generate a json file with all your pins data. 
     
