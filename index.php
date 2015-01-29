@@ -1,7 +1,7 @@
 <?php
 
-//error_reporting(E_ALL);
-//ini_set("display_errors", 1);
+// error_reporting(E_ALL);
+// ini_set("display_errors", 1);
 
 /** 
   * @desc A PHP script displaying Pinterest pins of a user using WookMark jQuery plugin
@@ -12,16 +12,18 @@
 */
 
  $pdoSqliteDsn = 'sqlite:pinterest.db';
- $numberOfItemsByScroll = 50;
+ $numberOfItemsByScroll = 20;
 
   /**
    * Helper function to build a link for jQuery Wookmark plugin + lightbox
    */
   function l($pin) {
-
-    $image = new Imagick(__DIR__.'/pins/mini-' . $pin['pin_image_name']); 
-    $d = $image->getImageGeometry(); 
-
+    $d = array("width"=>0, "height"=>0);
+    $filepath = __DIR__.'/pins/mini-' . $pin['pin_image_name'];
+    if (file_exists($filepath)) {
+	$image = new Imagick($filepath); 
+    	$d = $image->getImageGeometry(); 
+    }
 
     $link  = '<a href="pins/' . $pin['pin_image_name'] . '" rel="lightbox">';
     $link .= '<img src="pins/mini-' . $pin['pin_image_name'] . '" alt="' . $pin['description'] . ' - ' . $pin['board'] . '" width="' . $d['width'].'" height="' . $d['height'] . '">';
@@ -108,7 +110,7 @@ if (isset($_GET['p'])) {
         }
         catch (PDOException $ex) {
           echo $ex->getMessage();
-        }
+        } 
 ?>
         </ul>
       </div>
@@ -182,6 +184,15 @@ if (isset($_GET['p'])) {
       });
     })(jQuery);
   </script>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
+  ga('create', 'UA-116372-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
 </body>
 </html>
